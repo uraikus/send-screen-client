@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="res/index.css">
+<script src="res/index.js"></script>
+<script src="res/listeners.js"></script>
+<script src="res/node.js"></script>
+<input type="button" value="Close App" style="background-color: red;" id="closeButton">
+<div id="login">
+  <input placeholder="Hostname" type="text" id="loginHostname">
+  <input placeholder="Password" type="password" id="loginPassword">
+  <input type="button" value="Login" id="loginSubmit">
+  <div id="loginError"></div>
+</div>
+<div id="controls" style="display: none;">
+  <input type="button" value="Devices" style="background-color: blue;" id="devicesButton">
+  <input type="button" value="Start Casting" style="background-color: green;" id="startCastButton">
+  <input type="button" value="Stop Casting" style="background-color: red;" id="stopCastButton" disabled>
+</div>
+<div id="devices" style="display: none;">
+  <input type="button" value="Controls" style="background-color: blue;" id="controlsButton">
+  <table id="devicePane">
+  </table>
+  <input type="button" value="Add Device" style="background-color: rgb(0, 182, 95);" id="addDevice">
+  <input type="button" value="Save Devices" style="background-color: rgb(0, 182, 95);" id="saveDevices">
+</div>

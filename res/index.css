@@ -1,0 +1,45 @@
+body {
+  background-image: url(crosses-freely.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+#login, #controls, #devices {
+  background-color: rgba(50, 50, 50, 0.7);
+  box-sizing: border-box;
+  left: calc(50% - 250px);
+  position: fixed;
+  padding: 10px;
+  border-radius: 20px;
+  border: 3px ridge rgb(50, 50, 50);
+  top: 50px;
+  width: 500px;
+}
+
+input {
+  width: 100%;
+  border-radius: 5px;
+  font-size: 150%;
+  margin: 3px;
+}
+
+input[type='button'] {
+  cursor: pointer;
+  color: white;
+  text-shadow: 0 0 5px black;
+}
+
+#login input[type='text'], #login input[type='password'] {
+  border: 2px ridge rgb(50, 50, 50);
+}
+
+#login input[type='button'] {
+  background-color: rgb(36, 142, 53);
+}
+
+#controls input[type='button']:disabled {
+  background-color: black !important;
+  cursor: not-allowed !important;
+}

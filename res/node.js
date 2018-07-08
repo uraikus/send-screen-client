@@ -1,26 +1,40 @@
+/* global goodLogin, badLogin */
+
 const { exec } = require('child_process')
 const { readFileSync } = require('fs')
 const resizeImg = require('resize-img')
 const io = require('socket.io-client')
-const serverPass = process.argv[2]
-const serverURI = process.argv[3] || 'http://localhost'
-const resWidth = parseInt(process.argv[4]) || 1366
-const resHeight = parseInt(process.argv[5]) || 758
+var resWidth = 1200
+var resHeight = 800
+var loggedIn = false
+var socket
+var cast = false
 
-var socket = io(serverURI)
-socket.emit('login', serverPass)
+function connectServer (serverURI, serverPass) {
+  socket = io(`http://${serverURI}`)
+  socket.on('login', r => {
+    if (r === true) {
+      loggedIn = true
+      goodLogin()
+    } else if (r === false) {
+      badLogin('Bad password.')
+    }
+  })
+  socket.emit('login', serverPass)
+}
 
-socket.on('login', r => {
-  if (r === 'true') {
-    sendImage()
-    console.log('Good login! Now sending...')
-  } else {
-    console.log('Bad login')
-    process.exit()
-  }
-})
+function startScreenShare () {
+  if (cast === true) return false
+  cast = true
+  sendImage()
+}
+
+function stopScreenShare () {
+  cast = false
+}
 
 function sendImage () {
+  if (cast === false || loggedIn === false) return false
   exec('screencapture -m -t jpg -x /tmp/screenshot.jpg', (err, stdout, stderr) => {
     if (err) {
       console.log(err)
