@@ -1,26 +1,25 @@
-/* global localStorage, socket */
+/* global localStorage */
+const Client = require('ssh2').Client
+var IP
+require('os').networkInterfaces().en0.forEach(adapter => {
+  if (adapter.family === 'IPv4') {
+    IP = adapter.address
+  }
+})
 
 window.onload = () => {
-  if (localStorage.hostname) {
-    document.getElementById('loginHostname').value = localStorage.hostname
-    document.getElementById('loginPassword').value = localStorage.password
-  }
   if (localStorage.devices) {
     let devices = JSON.parse(localStorage.devices)
     devices.forEach(device => {
       addDevice(device.host, device.username, device.password)
     })
   }
-}
-
-function goodLogin () {
-  document.getElementById('login').style.display = 'none'
-  document.getElementById('controls').style.display = 'block'
-}
-
-function badLogin (err) {
-  err = err || 'An unknown error occured. Check devices network connections.'
-  document.getElementById('loginError').innerText = err
+  if (localStorage.y) {
+    document.getElementById('resY').value = localStorage.y
+  }
+  if (localStorage.x) {
+    document.getElementById('resX').value = localStorage.x
+  }
 }
 
 function addDevice (host, username, password) {
@@ -47,16 +46,31 @@ function addDevice (host, username, password) {
   if (password) passwordInput.value = password
   let connect = document.createElement('input')
   connect.type = 'button'
-  connect.value = 'Connect'
+  connect.value = 'On'
   connect.style.backgroundColor = 'green'
   connect.onclick = function () {
     let row = this.parentElement.parentElement
     let device = {
       host: row.querySelector('.host').value,
       username: row.querySelector('.username').value,
-      password: row.querySelector('.password').value
+      password: row.querySelector('.password').value,
+      readyTimeout: 999999
     }
-    if (device.host && device.username && device.password) socket.emit('start', device)
+    if (device.host && device.username && device.password) piLaunch(device)
+  }
+  let disConnect = document.createElement('input')
+  disConnect.type = 'button'
+  disConnect.value = 'Off'
+  disConnect.style.backgroundColor = 'orange'
+  disConnect.onclick = function () {
+    let row = this.parentElement.parentElement
+    let device = {
+      host: row.querySelector('.host').value,
+      username: row.querySelector('.username').value,
+      password: row.querySelector('.password').value,
+      readyTimeout: 999999
+    }
+    if (device.host && device.username && device.password) piStop(device)
   }
   let delButton = document.createElement('input')
   delButton.type = 'button'
@@ -70,6 +84,7 @@ function addDevice (host, username, password) {
   row.cells[1].appendChild(usernameInput)
   row.cells[2].appendChild(passwordInput)
   row.cells[3].appendChild(connect)
+  row.cells[3].appendChild(disConnect)
   row.cells[3].appendChild(delButton)
 }
 
@@ -91,4 +106,38 @@ function saveDevices () {
     }
   }
   localStorage.devices = JSON.stringify(devices)
+}
+
+function piLaunch (device) {
+  let ssh = new Client()
+  ssh.on('error', err => {
+    console.log(err)
+  })
+  ssh.on('ready', function () {
+    ssh.exec(`DISPLAY=:0 chromium-browser -kiosk ${IP}:3777`, function (err, stream) {
+      if (err) {
+        console.log(err)
+      }
+      stream.on('close', function (code, signal) {
+        ssh.end()
+      })
+        .on('data', console.log)
+        .stderr.on('data', console.log)
+    })
+  }).connect(device)
+}
+
+function piStop (device) {
+  let ssh = new Client()
+  ssh.on('error', err => {
+    console.log(err)
+  })
+  ssh.on('ready', function () {
+    ssh.exec('killall chromium-browser', function (err, stream) {
+      if (err) {
+        console.log(err)
+      }
+      ssh.end()
+    })
+  }).connect(device)
 }

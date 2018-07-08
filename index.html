@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="res/index.css">
+<script src="server.js"></script>
 <script src="res/index.js"></script>
 <script src="res/listeners.js"></script>
 <script src="res/node.js"></script>
 <input type="button" value="Close App" style="background-color: red;" id="closeButton">
-<div id="login">
-  <input placeholder="Hostname" type="text" id="loginHostname">
-  <input placeholder="Password" type="password" id="loginPassword">
-  <input type="button" value="Login" id="loginSubmit">
-  <div id="loginError"></div>
-</div>
-<div id="controls" style="display: none;">
+<div id="controls">
   <input type="button" value="Devices" style="background-color: blue;" id="devicesButton">
   <input type="button" value="Start Casting" style="background-color: green;" id="startCastButton">
   <input type="button" value="Stop Casting" style="background-color: red;" id="stopCastButton" disabled>
+  Resolution:
+  <input class="resolution" type="number" id="resY" value="1200" placeholder="Height">
+  X
+  <input class="resolution" type="number" id="resX" value="800" placeholder="Width">
 </div>
 <div id="devices" style="display: none;">
   <input type="button" value="Controls" style="background-color: blue;" id="controlsButton">

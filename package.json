@@ -17,7 +17,12 @@
   },
   "homepage": "https://github.com/uraikus/send-screen-client#readme",
   "dependencies": {
+    "express": "^4.16.3",
     "resize-img": "^1.1.2",
-    "socket.io-client": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "ssh2": "^0.6.1"
+  },
+  "window": {
+    "height": 460
   }
 }

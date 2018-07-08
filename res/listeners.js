@@ -1,13 +1,6 @@
 /* global localStorage, connectServer, startScreenShare, stopScreenShare, nw, saveDevices, addDevice */
 
 window.addEventListener('load', () => {
-  document.getElementById('loginSubmit').onclick = () => {
-    let hostname = document.getElementById('loginHostname').value
-    let password = document.getElementById('loginPassword').value
-    localStorage.hostname = hostname
-    localStorage.password = password
-    connectServer(hostname, password)
-  }
   document.getElementById('devicesButton').onclick = () => {
     document.getElementById('controls').style.display = 'none'
     document.getElementById('devices').style.display = 'block'
@@ -34,4 +27,10 @@ window.addEventListener('load', () => {
     new Notification('Devices saved!')
   }
   document.getElementById('addDevice').onclick = addDevice
+  document.getElementById('resY').oninput = function () {
+    localStorage.y = this.value
+  }
+  document.getElementById('resX').oninput = function () {
+    localStorage.x = this.value
+  }
 })

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<style>
+  html {
+    background-color: black;
+  }
+  img {
+    cursor: none;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+</style>
+<img>
+<script src="socket/socket.io.js"></script>
+<script>
+  const element = document.querySelector('img')
+  var socket = io()
+  socket.on('image', img => {
+    element.src = img
+  })
+</script>

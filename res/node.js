@@ -1,27 +1,9 @@
-/* global goodLogin, badLogin */
+/* global io */
 
 const { exec } = require('child_process')
 const { readFileSync } = require('fs')
 const resizeImg = require('resize-img')
-const io = require('socket.io-client')
-var resWidth = 1200
-var resHeight = 800
-var loggedIn = false
-var socket
 var cast = false
-
-function connectServer (serverURI, serverPass) {
-  socket = io(`http://${serverURI}`)
-  socket.on('login', r => {
-    if (r === true) {
-      loggedIn = true
-      goodLogin()
-    } else if (r === false) {
-      badLogin('Bad password.')
-    }
-  })
-  socket.emit('login', serverPass)
-}
 
 function startScreenShare () {
   if (cast === true) return false
@@ -34,7 +16,7 @@ function stopScreenShare () {
 }
 
 function sendImage () {
-  if (cast === false || loggedIn === false) return false
+  if (cast === false) return false
   exec('screencapture -m -t jpg -x /tmp/screenshot.jpg', (err, stdout, stderr) => {
     if (err) {
       console.log(err)
@@ -44,9 +26,13 @@ function sendImage () {
       sendImage()
     } else {
       let img = readFileSync('/tmp/screenshot.jpg')
+      let resWidth = parseInt(document.getElementById('resX').value)
+      let resHeight = parseInt(document.getElementById('resY').value)
       resizeImg(img, {width: resWidth, height: resHeight})
         .then(buffer => {
-          socket.emit('cast', buffer)
+          let bytes = new Uint8Array(buffer)
+          let uri = `data:image/jpg;base64,${encode(bytes)}`
+          io.emit('image', uri)
           sendImage()
         })
         .catch(err => {
@@ -55,4 +41,31 @@ function sendImage () {
         })
     }
   })
+}
+
+function encode (input) {
+  var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+  var output = ''
+  var chr1, chr2, chr3, enc1, enc2, enc3, enc4
+  var i = 0
+
+  while (i < input.length) {
+    chr1 = input[i++]
+    chr2 = i < input.length ? input[i++] : Number.NaN // Not sure if the index
+    chr3 = i < input.length ? input[i++] : Number.NaN // checks are needed here
+
+    enc1 = chr1 >> 2
+    enc2 = ((chr1 & 3) << 4) | (chr2 >> 4)
+    enc3 = ((chr2 & 15) << 2) | (chr3 >> 6)
+    enc4 = chr3 & 63
+
+    if (isNaN(chr2)) {
+      enc3 = enc4 = 64
+    } else if (isNaN(chr3)) {
+      enc4 = 64
+    }
+    output += keyStr.charAt(enc1) + keyStr.charAt(enc2) +
+                  keyStr.charAt(enc3) + keyStr.charAt(enc4)
+  }
+  return output
 }
