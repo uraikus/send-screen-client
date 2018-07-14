@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="res/index.css">
+<title>Send Screen</title>
 <script src="server.js"></script>
 <script src="res/index.js"></script>
 <script src="res/listeners.js"></script>
@@ -9,10 +10,16 @@
   <input type="button" value="Devices" style="background-color: blue;" id="devicesButton">
   <input type="button" value="Start Casting" style="background-color: green;" id="startCastButton">
   <input type="button" value="Stop Casting" style="background-color: red;" id="stopCastButton" disabled>
-  Resolution:
-  <input class="resolution" type="number" id="resY" value="1200" placeholder="Height">
-  X
-  <input class="resolution" type="number" id="resX" value="800" placeholder="Width">
+  <span style="float: left;">
+    Resize:
+    <input type="checkbox" id="resize">
+  </span>
+  <span id="resizeDimensions" style="display: none; float: right;">
+    Resolution:
+    <input class="resolution" type="number" id="resY" value="1200" placeholder="Height">
+    X
+    <input class="resolution" type="number" id="resX" value="800" placeholder="Width">
+  </span>
 </div>
 <div id="devices" style="display: none;">
   <input type="button" value="Controls" style="background-color: blue;" id="controlsButton">

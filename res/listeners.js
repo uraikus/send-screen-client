@@ -1,12 +1,12 @@
-/* global localStorage, connectServer, startScreenShare, stopScreenShare, nw, saveDevices, addDevice */
+/* global localStorage, startScreenShare, stopScreenShare, nw, saveDevices, addDevice */
 
 window.addEventListener('load', () => {
   document.getElementById('devicesButton').onclick = () => {
     document.getElementById('controls').style.display = 'none'
-    document.getElementById('devices').style.display = 'block'
+    document.getElementById('devices').style.display = 'inline-block'
   }
   document.getElementById('controlsButton').onclick = () => {
-    document.getElementById('controls').style.display = 'block'
+    document.getElementById('controls').style.display = 'inline-block'
     document.getElementById('devices').style.display = 'none'
   }
   document.getElementById('startCastButton').onclick = function () {
@@ -32,5 +32,9 @@ window.addEventListener('load', () => {
   }
   document.getElementById('resX').oninput = function () {
     localStorage.x = this.value
+  }
+  document.getElementById('resize').onchange = function () {
+    localStorage.resize = this.checked
+    document.getElementById('resizeDimensions').style.display = this.checked ? 'inline' : 'none'
   }
 })

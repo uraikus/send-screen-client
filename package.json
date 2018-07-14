@@ -1,5 +1,5 @@
 {
-  "name": "Send Screen",
+  "name": "send-screen",
   "version": "1.0.0",
   "description": "Send screen to devices on network.",
   "main": "index.html",
@@ -25,6 +25,6 @@
   },
   "window": {
     "height": 460,
-    "width:": 520
+    "width:": 550
   }
 }

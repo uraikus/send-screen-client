@@ -20,6 +20,11 @@ window.onload = () => {
   if (localStorage.x) {
     document.getElementById('resX').value = localStorage.x
   }
+  if (localStorage.resize !== undefined) {
+    let resize = document.getElementById('resize')
+    resize.checked = (localStorage.resize === 'true')
+    document.getElementById('resizeDimensions').style.display = (resize.checked) ? 'inline' : 'none'
+  }
 }
 
 function addDevice (host, username, password) {

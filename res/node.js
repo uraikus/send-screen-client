@@ -17,10 +17,10 @@ function stopScreenShare () {
 
 function sendImage () {
   if (cast === false) {
-    unlink('./screenshot.jpg', console.log)
+    unlink('/tmp/screenshot.jpg', console.log)
     return false
   }
-  exec('screencapture -m -t jpg -x ./screenshot.jpg', (err, stdout, stderr) => {
+  exec('screencapture -m -t jpg -x /tmp/screenshot.jpg', (err, stdout, stderr) => {
     if (err) {
       console.log(err)
       sendImage()
@@ -28,21 +28,26 @@ function sendImage () {
       console.log(stderr)
       sendImage()
     } else {
-      let img = readFileSync('./screenshot.jpg')
-      let resWidth = parseInt(document.getElementById('resX').value)
-      let resHeight = parseInt(document.getElementById('resY').value)
-      resizeImg(img, {width: resWidth, height: resHeight})
-        .then(buffer => {
-          let uri = `data:image/jpg;base64,${encode(buffer)}`
-          io.emit('image', uri)
-          sendImage()
-        })
-        .catch(err => {
-          console.log(err)
-          sendImage()
-        })
+      let img = readFileSync('/tmp/screenshot.jpg')
+      let resize = document.getElementById('resize').checked
+      if (resize) {
+        let resWidth = parseInt(document.getElementById('resX').value)
+        let resHeight = parseInt(document.getElementById('resY').value)
+        resizeImg(img, {width: resWidth, height: resHeight})
+          .then(emitBufferToImage)
+          .catch(err => {
+            console.log(err)
+            sendImage()
+          })
+      } else emitBufferToImage(img)
     }
   })
+}
+
+function emitBufferToImage (buffer) {
+  let uri = `data:image/jpg;base64,${encode(buffer)}`
+  io.emit('image', uri)
+  sendImage()
 }
 
 function encode (input) {
