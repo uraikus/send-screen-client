@@ -4,6 +4,7 @@
   "description": "Send screen as upload to main server.",
   "main": "index.html",
   "scripts": {
+    "start": "/Applications/nwjs.app/Contents/MacOS/nwjs .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +24,7 @@
     "ssh2": "^0.6.1"
   },
   "window": {
-    "height": 460
+    "height": 460,
+    "width:": 520
   }
 }

@@ -1,7 +1,7 @@
 /* global io */
 
 const { exec } = require('child_process')
-const { readFileSync } = require('fs')
+const { readFileSync, unlink } = require('fs')
 const resizeImg = require('resize-img')
 var cast = false
 
@@ -16,8 +16,11 @@ function stopScreenShare () {
 }
 
 function sendImage () {
-  if (cast === false) return false
-  exec('screencapture -m -t jpg -x /tmp/screenshot.jpg', (err, stdout, stderr) => {
+  if (cast === false) {
+    unlink('./screenshot.jpg', console.log)
+    return false
+  }
+  exec('screencapture -m -t jpg -x ./screenshot.jpg', (err, stdout, stderr) => {
     if (err) {
       console.log(err)
       sendImage()
@@ -25,13 +28,12 @@ function sendImage () {
       console.log(stderr)
       sendImage()
     } else {
-      let img = readFileSync('/tmp/screenshot.jpg')
+      let img = readFileSync('./screenshot.jpg')
       let resWidth = parseInt(document.getElementById('resX').value)
       let resHeight = parseInt(document.getElementById('resY').value)
       resizeImg(img, {width: resWidth, height: resHeight})
         .then(buffer => {
-          let bytes = new Uint8Array(buffer)
-          let uri = `data:image/jpg;base64,${encode(bytes)}`
+          let uri = `data:image/jpg;base64,${encode(buffer)}`
           io.emit('image', uri)
           sendImage()
         })
