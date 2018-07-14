@@ -1,7 +1,7 @@
 {
-  "name": "send-screen-client",
+  "name": "Send Screen",
   "version": "1.0.0",
-  "description": "Send screen as upload to main server.",
+  "description": "Send screen to devices on network.",
   "main": "index.html",
   "scripts": {
     "start": "/Applications/nwjs.app/Contents/MacOS/nwjs .",
